@@ -8,7 +8,7 @@
 
 [![Stars](https://img.shields.io/github/stars/lynote-ai/humanize-text?style=flat&color=yellow)](https://github.com/lynote-ai/humanize-text/stargazers)
 [![License](https://img.shields.io/github/license/lynote-ai/humanize-text)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![Last commit](https://img.shields.io/github/last-commit/lynote-ai/humanize-text)](https://github.com/lynote-ai/humanize-text/commits)
 [![Open in HF Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/Lynote/free-ai-detector)
 
@@ -21,6 +21,7 @@
 
 <p align="center">
   English | <a href="README-zh.md">中文</a>
+</p>
 
 </div>
 
@@ -53,32 +54,18 @@ The interesting part isn't the LLM rewriting — everyone does that. It's the **
 git clone https://github.com/lynote-ai/humanize-text.git
 cd humanize-text
 pip install -r requirements.txt
-cp config.example.toml config.toml   # add your API key
-python -m humanize_text --input draft.txt --tier standard
+cp config/config.example.toml config/config.toml   # add your API key
+python -m src.standard.pipeline --input draft.txt
 ```
 
 ## Tiers
 
-| Tier | Steps | Best for |
+| Tier | What it does | Best for |
 |---|---|---|
-| `light` | Single LLM pass | Preserving your voice, light cleanup |
-| `standard` | 2 LLM + 2 MT hops | The default balance |
-| `deep` | Full chain, extended | Maximum restructuring |
+| `standard` | 2 LLM rewrites + 2 MT hops | The default balance |
+| `advanced` | + multi-round LLM rewriting | Deeper restructuring |
+| `focus` | + detection-guided feedback loop | Maximum restructuring |
 
-
-A Python toolkit for text humanization. Two parts:
-
-**Reference implementations** — four documented approaches to
-humanizing machine-generated text: translation chaining, multi-turn
-LLM rewriting, detection-guided feedback loops, and mixed-engine
-translation. 
-
-**Standard Pipeline** — the configuration we actually run. Four steps:
-two LLM rewrite passes (the second carries the first as conversation
-history) followed by two NMT hops across different engines. The
-translation chain routes through Chinese → Japanese → Finnish before
-returning to English, maximizing linguistic distance at each hop so
-that no single engine's structural fingerprint survives.
 
 **Note on intended use.** This toolkit is for improving the readability
 and natural cadence of AI-assisted drafts. If you are writing in an
@@ -95,41 +82,7 @@ disclosure.
 >
 > **This repo stays a faithful, runnable reference. For the current best results, try [Lynote.ai](https://lynote.ai).**
 
-</p>
-
 ---
-
-## What is Humanize-Text?
-
-An AI text humanization toolkit. This repo evolved through two stages:
-
-- **v1.0** — Documented **4 humanization methodologies** as reference implementations (translation chain, multi-turn LLM rewriting, detection-guided feedback loop, mixed-engine translation). See [docs/techniques.md](docs/techniques.md).
-- **v1.5 (current)** — Added the **Standard Pipeline**: a production-grade integration of Method 1 (Translation Chain) + Method 2 (LLM Rewriting), fixed as a 4-step chain we actually run and recommend.
-
-### v1.5.1 — Standard Pipeline (Recommended)
-
-The Standard Pipeline preserves the original writing style while routing text through a 4-step chain: two LLM humanization rewrites (DeepSeek or [OpenRouter](https://openrouter.ai) via OpenAI-compatible API) followed by two cross-engine translation hops.
-
-```
-Input (EN) → Chinese (LLM) → Japanese (LLM) → Finnish (Google) → English (Niutrans)
-```
-
-LLM steps use **DeepSeek** (default) or **[OpenRouter](https://openrouter.ai)** — any OpenAI-compatible chat API. Configure via `[llm]` in `config.toml`. See [Configuration Guide](docs/configuration.md).
-
-**See [`examples/showcase/`](examples/showcase/) for 5 real samples with full intermediate-step outputs and AI-detection verdicts.**
-
-**Characteristics:**
-- Strong original style preservation
-- Fast processing speed
-- 100% key information retention on our 50-pair sample
-- Expert quality score: 9.1/10 (this repo's output)
-
-> The 4 underlying methodologies live in `src/methodologies/` as reference implementations for research and customization. The Standard Pipeline (`src/standard/pipeline.py`) is the recommended production path.
-
-> **Want broader coverage + all methods combined?**
-> Lynote.ai fuses Standard + Advanced + Focus pipelines into one intelligent system — auto-selects the optimal approach for each passage.
->
-> **[Try Lynote.ai Free →](https://lynote.ai)**
 
 ## Lynote.ai — Beyond Standard
 
