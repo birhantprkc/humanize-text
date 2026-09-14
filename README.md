@@ -1,4 +1,70 @@
-## Humanize Text: Open-source toolkit for more natural AI-assisted drafts
+<div align="center">
+
+# Lynote Humanize Text
+
+**An open-source pipeline for rewriting AI-generated text into natural human prose**
+
+[![Product Hunt](https://img.shields.io/badge/Product%20Hunt-Launching%20Sept%2016-DA552F?logo=producthunt&logoColor=white)](https://www.producthunt.com/products/lynote-ai?launch=lynote-3)
+
+[![Stars](https://img.shields.io/github/stars/lynote-ai/humanize-text?style=flat&color=yellow)](https://github.com/lynote-ai/humanize-text/stargazers)
+[![License](https://img.shields.io/github/license/lynote-ai/humanize-text)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
+[![Last commit](https://img.shields.io/github/last-commit/lynote-ai/humanize-text)](https://github.com/lynote-ai/humanize-text/commits)
+[![Open in HF Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/Lynote/free-ai-detector)
+
+[Website](https://lynote.ai) ·[Product Hunt](https://www.producthunt.com/products/lynote-ai?launch=lynote-3) · [Try the detector](https://github.com/lynote-ai/ai-text-detector) · [Discord](https://discord.gg/NzcH5DYzBj) · [X](https://x.com/lynote_ai) 
+
+<p align="center">
+  <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
+</p>
+
+
+<p align="center">
+  English | <a href="README-zh.md">中文</a>
+
+</div>
+
+---
+
+Most humanizers are a black box with marketing claims attached. This one is open source, so you can read what it actually does.
+
+The interesting part isn't the LLM rewriting — everyone does that. It's the **translation chain**.
+
+## How it works 
+
+### Step-by-Step Pipeline
+
+| Step | Engine | From → To | Purpose |
+|------|--------|-----------|---------|
+| 1 | LLM (temp 1.3) | Input → Chinese (Chinese Rewriting) | LLM humanization rewrite + language shift |
+| 2 | LLM (temp 1.3) | Chinese → Japanese (Japanese Rewriting) | Second LLM humanization, carries Step 1 as history |
+| 3 | Google Translate | Japanese → Finnish (First Round of Translation) | First translation hop — distant language structural disruption |
+| 4 | Niutrans | Finnish → English (Second-Round Translation) | Second translation hop — cross-engine reconstruction |
+
+### Why This Chain Works
+
+1. **Steps 1–2 (LLM Rewrite):** Configurable LLM provider (DeepSeek default, OpenRouter optional) at temperature 1.3 rewrites while translating, breaking AI statistical fingerprints with creative variation. Step 2 carries Step 1 as conversation history for coherent humanization.
+2. **Steps 3–4 (Multi-Engine Translation):** Two different NMT engines (Google → Niutrans) introduce compounding structural changes. No single-engine fingerprint survives.
+3. **Distant Languages:** Chinese → Japanese → Finnish maximizes linguistic distance at each hop, ensuring thorough restructuring before reconstruction to English.
+
+## Quick start
+
+```bash
+git clone https://github.com/lynote-ai/humanize-text.git
+cd humanize-text
+pip install -r requirements.txt
+cp config.example.toml config.toml   # add your API key
+python -m humanize_text --input draft.txt --tier standard
+```
+
+## Tiers
+
+| Tier | Steps | Best for |
+|---|---|---|
+| `light` | Single LLM pass | Preserving your voice, light cleanup |
+| `standard` | 2 LLM + 2 MT hops | The default balance |
+| `deep` | Full chain, extended | Maximum restructuring |
+
 
 A Python toolkit for text humanization. Two parts:
 
@@ -29,24 +95,6 @@ disclosure.
 >
 > **This repo stays a faithful, runnable reference. For the current best results, try [Lynote.ai](https://lynote.ai).**
 
-**Other Quality Projects**</br>
-AI Text Detector:https://github.com/lynote-ai/ai-text-detector</br>
-AI Image Detector:https://github.com/lynote-ai/ai-image-detector</br>
-
-<p align="center">
-  <img src="presentation/banner.png" alt="Humanize-Text" width="600"/>
-</p>
-
-<p align="center">
-  <a href="https://github.com/lynote-ai/humanize-text/stargazers"><img src="https://img.shields.io/github/stars/lynote-ai/humanize-text?style=social" alt="Stars"></a>
-  <a href="https://github.com/lynote-ai/humanize-text/network/members"><img src="https://img.shields.io/github/forks/lynote-ai/humanize-text?style=social" alt="Forks"></a>
-  <a href="https://github.com/lynote-ai/humanize-text/blob/main/LICENSE"><img src="https://img.shields.io/github/license/lynote-ai/humanize-text" alt="License"></a>
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="Python"></a>
-  <a href="https://lynote.ai"><img src="https://img.shields.io/badge/Try-Lynote.ai-brightgreen?style=for-the-badge" alt="Lynote.ai"></a>
-</p>
-
-<p align="center">
-  English | <a href="README-zh.md">中文</a>
 </p>
 
 ---
@@ -83,32 +131,11 @@ LLM steps use **DeepSeek** (default) or **[OpenRouter](https://openrouter.ai)** 
 >
 > **[Try Lynote.ai Free →](https://lynote.ai)**
 
----
-
-## How It Works
-
-### Step-by-Step Pipeline
-
-| Step | Engine | From → To | Purpose |
-|------|--------|-----------|---------|
-| 1 | LLM (temp 1.3) | Input → Chinese (Chinese Rewriting) | LLM humanization rewrite + language shift |
-| 2 | LLM (temp 1.3) | Chinese → Japanese (Japanese Rewriting) | Second LLM humanization, carries Step 1 as history |
-| 3 | Google Translate | Japanese → Finnish (First Round of Translation) | First translation hop — distant language structural disruption |
-| 4 | Niutrans | Finnish → English (Second-Round Translation) | Second translation hop — cross-engine reconstruction |
-
-### Why This Chain Works
-
-1. **Steps 1–2 (LLM Rewrite):** Configurable LLM provider (DeepSeek default, OpenRouter optional) at temperature 1.3 rewrites while translating, breaking AI statistical fingerprints with creative variation. Step 2 carries Step 1 as conversation history for coherent humanization.
-2. **Steps 3–4 (Multi-Engine Translation):** Two different NMT engines (Google → Niutrans) introduce compounding structural changes. No single-engine fingerprint survives.
-3. **Distant Languages:** Chinese → Japanese → Finnish maximizes linguistic distance at each hop, ensuring thorough restructuring before reconstruction to English.
-
----
-
 ## Lynote.ai — Beyond Standard
 
 <p align="center">
-  <a href="https://lynote.ai">
-    <img src="presentation/lynote_banner.png" alt="Lynote.ai" width="500"/>
+  <a href="https://lynote.ai/ai-humanizer">
+    <img src="https://github.com/lynote-ai/humanize-text/raw/main/presentation/humanizer.png" alt="Humanize-Text" width="100%">
   </a>
 </p>
 
@@ -294,18 +321,24 @@ examples/
 ```
 
 ---
+## Limitations
+
+Round-trip translation costs precision. Technical terminology and citations can drift, and the deeper tiers trade more of your original voice for more restructuring. If you're working with anything where exact wording matters, read the output carefully rather than trusting the pipeline.
+
+No rewriting method makes text reliably undetectable. Detectors update faster than pipelines do, and results vary by input length, subject matter, and which detector you're facing. Treat the `showcase/` results as a snapshot, not a guarantee.
+
+## Related
+
+- [Lynote AI Detector](https://lynote.ai/ai-detector) — sentence-level scoring, free
+- [Lynote AI Humanizer](https://lynote.ai/ai-humanizer) — hosted version of this pipeline
+- [Hugging Face Space](https://huggingface.co/spaces/Lynote/free-ai-detector) — try it without installing anything
+
 
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
 
 ---
-
-## Links
-
-- [Lynote.ai — AI Humanization Platform](https://lynote.ai/ai-humanizer)
-- [Report a Bug](https://github.com/lynote-ai/humanize-text/issues)
-
 
 ## Support & Contact
 ⭐ **Star this repository** if this all-in-one text humanization toolkit helps you.
