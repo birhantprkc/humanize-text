@@ -158,9 +158,9 @@ The Standard pipeline above is **one of three tiers** available. Each has differ
   <a href="https://lynote.ai"><img src="https://img.shields.io/badge/Try_Lynote.ai_Free-brightgreen?style=for-the-badge" alt="Try Lynote.ai Free"></a>
 </p>
 
----
 
-## Quick Start
+
+## Three ways to run it
 
 | Method | Who It's For | How |
 |--------|-------------|-----|
