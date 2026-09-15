@@ -1,4 +1,4 @@
-# Contributing to AI-Humanizer
+# Contributing to Humanize Text
 
 Thank you for your interest in contributing!
 
@@ -13,8 +13,8 @@ Thank you for your interest in contributing!
 ## Development Setup
 
 ```bash
-git clone https://github.com/molly554/ai-humanize.git
-cd AI-Humanizer
+git clone https://github.com/lynote-ai/humanize-text.git
+cd humanize-text
 pip install -r requirements.txt
 ```
 
@@ -27,11 +27,11 @@ pip install -r requirements.txt
 
 ## Reporting Bugs
 
-Use [GitHub Issues](https://github.com/molly554/ai-humanize/issues) with the bug report template.
+Use [GitHub Issues](https://github.com/lynote-ai/humanize-text/issues) with the bug report template.
 
 ## Feature Requests
 
-Use [GitHub Issues](https://github.com/molly554/ai-humanize/issues) with the feature request template.
+Use [GitHub Issues](https://github.com/lynote-ai/humanize-text/issues) with the feature request template.
 
 ## Code of Conduct
 
